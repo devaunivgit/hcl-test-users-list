@@ -1,5 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FilterOption } from './filter-option.interface';
+import {UsersService} from '../users.service';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {group} from '@angular/animations';
+
+class UserData{
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  website: string;
+}
 
 @Component({
   selector: 'app-users',
@@ -31,9 +42,33 @@ export class UsersComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  public userData: UserData[];
+  public filterGroup: FormGroup;
+  public filterInput: FormControl;
+  public selectedType: FormControl;
+  public filterValue: UserData[];
 
-  ngOnInit(): void {
+  constructor(
+    private readonly userService: UsersService,
+    private readonly formBuilder: FormBuilder,
+  ) {}
+
+  public ngOnInit(): void {
+    this.userService.getData().subscribe((response: UserData[]) => {
+      this.userData = response;
+    });
+
+    this.filterGroup = this.formBuilder.group({
+      filterInput: new FormControl('name'),
+        selectedType: new FormControl(),
+    }
+    );
+
+
+    this.filterInput.valueChanges.subscribe((value) => {
+      const selectedType = this.selectedType.value;
+      this.filterValue = this.userData.filter((data) => (data[selectedType].indexOf(value) !== -1));
+    });
   }
 
 }
