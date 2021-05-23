@@ -2,15 +2,16 @@
   <div class="control-panel">
     <form>
       <label class="select">Select column to filter:
-        <select>
+        <select name="filterName" (change)="applyFilter()"  [(ngModel)]="searchOption" >
           <option *ngFor="let opt of options" [value]="opt.value">{{ opt.text }}</option>
         </select>
       </label>
       <label class="input">Enter filter keywords:
-        <input type="text" placeholder="filter keywords go here..." />
+        <input type="text" name="filterValue"  [(ngModel)]="searchKey" (keyup)="applyFilter()" placeholder="filter keywords go here..." />
       </label>
     </form>
   </div>
+   
   <div class="users-list-wrapper">
     <table class="users-list">
       <thead>
@@ -23,12 +24,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>John Doe</td>
-          <td>jdoe</td>
-          <td>john.doe@jd.com</td>
-          <td>024-648-3804</td>
-          <td>jd.com</td>
+        <tr *ngFor="let emp of results; let i=index;">
+          <td>{{emp.name}}</td>
+          <td>{{emp.username}}</td>
+          <td>{{emp.email}}</td>
+          <td>{{emp.phone}}</td>
+          <td>{{emp.website}}</td>
         </tr>
       </tbody>
     </table>
